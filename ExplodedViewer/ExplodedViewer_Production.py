@@ -35,37 +35,13 @@ def resetSlaveControlPositions(*args):
 
 def handleWarning(warningText):
     #cmds.popupMenu(label="foo")
-
     print warningText
 
 def addNamePrefix():
     controlNamePrefix = cmds.textFieldGrp('controlNamePrefix', text=True, query=True)
     return controlNamePrefix
 
-def createMasterControlShape(objects):
-    #workInProgress
-    return
-
-def createMasterControls(*args):
-    # when I will create a way of getting a list of objects, sorting them
-    sel = cmds.ls(selection = True)
-    if len(sel) < 1:
-        handleWarning(warningText="WARNING: please select an object")
-        return
-
-    ##### handle groups work in progress
-    #for obj in sel:
-        #childArray = cmds.listRelatives(obj)
-        #if len(childArray) > 1:
-            #create separate master controller for the parent of that group
-            #if createdControl['subAssemblies_created'] == True
-                #create slave controls for each element in that array
-            #createSlaveControls(masterControl, objects, namePrefix)
-        #else
-            #create separate controls for each child object
-
-    ##### handle groups work in progress
-
+def createMasterControlShape():
     axisParameters = controlParameters["Master"]
     namePrefix = addNamePrefix()
     masterControlName = namePrefix + "Exploder_Ctrl_MASTER"
@@ -75,8 +51,64 @@ def createMasterControls(*args):
     #make master controls into boxes
     cmds.setAttr(masterControl + ".overrideLevelOfDetail", 1)
 
-    #lock unneeded axes ( the aim of the control is to move it in axis that it is assigned to)
-    createSlaveControls(masterControl, sel, namePrefix)
+    return masterControl, namePrefix
+
+def createMasterControls(*args):
+    # when I will create a way of getting a list of objects, sorting them
+    sel = cmds.ls(selection = True, transforms=True)
+    if len(sel) < 1:
+        handleWarning(warningText="WARNING: please select an object")
+        return
+
+    masterControl, namePrefix = createMasterControlShape()
+
+    # if there are groups and user set the option "create sub assemblies for each group", loop through groups, if there are no groups, create one master control for the whole selection
+    if createdControl['subAssemblies_created'] == True:
+        groupArray = []
+        groupChildren = []
+
+        nonGroupArray = []
+
+        for obj in sel:
+            #if object has shape children, add master control. If object has slave children, add secondary co
+            parentObj = cmds.listRelatives(obj, parent=True)
+            if parentObj: groupArray.append(parentObj)
+            else: nonGroupArray.append(obj)
+            #if parentObj.len > 1: groupArray.append(parentObj)
+            #getGroups2 = cmds.ls(sel, geometry = False)
+            #if there are groups, create a master control for that group and slave control for children of that group
+
+        #join two arrays
+        #remove duplicate selections
+        cleanGroupArray = []
+        for i in groupArray:
+            if i not in cleanGroupArray:
+                cleanGroupArray.append(i)
+
+        groupMasterPrefix = "groupMaster_"
+        groupMasterControl = createSlaveControls(masterControl, cleanGroupArray, groupMasterPrefix)
+
+        clean_NON_GroupArray = []
+        for i in nonGroupArray:
+            if i not in clean_NON_GroupArray:
+                clean_NON_GroupArray.append(i)
+
+        createSlaveControls(masterControl, clean_NON_GroupArray, namePrefix)
+
+        """
+        #SUB-ASSEMBLIES - work in progress - need to re-arrange nodes for the groups
+        for groupObj in cleanGroupArray:
+            groupMasterPrefix = "groupMaster"
+            groupMasterControl = createSlaveControls(masterControl, groupObj, groupMasterPrefix)
+
+            groupChildren = cmds.listRelatives(groupObj, children=True)
+            if groupChildren:
+                # the master is the group
+                subAssemblyNamePrefix = "_subAssemblyChild"
+                createSlaveControls(groupMasterControl, groupChildren, subAssemblyNamePrefix)
+        """
+    else:
+        createSlaveControls(masterControl, sel, namePrefix)
 
 def setSlaveControlPosition(obj):
     useXValue = 0
@@ -143,6 +175,8 @@ def createSlaveControls(masterControl, sel, namePrefix):
         #this is the multiply node that multiplies master control's X, Y or Z translate coord by slave's bounding box corresponding X, Y, Or Z axis transform coord
         createMultiplyNodes(selCounter, controlPosition, masterControl, slaveControl)
 
+    return slaveControl
+
 def randomizeChildControls(*args):
     randomizerSliderValue = cmds.floatSliderGrp('positionRandomizer_UIctrl', value=True, query=True)
 
@@ -167,8 +201,7 @@ createdControl = {
 controlParameters = {
 #NEW control regime
 "Master" : {
-    "masterColor": random.randint(10,15),
-    "defaultCoordinate": 1
+    "masterColor": random.randint(10,15)
 }
 }
 
@@ -180,9 +213,9 @@ cmds.window("Exploded Viewer",width=windowWidth, height=windowWidth)
 
 cmds.frameLayout( label='Create New Controls' )
 cmds.text( label='Step 1: select objects to shift', align="left", height=20)
-cmds.text( label='Step 2: Turn on this checkbox to create sub-assemblies for all groups', align="left", height=20)
+cmds.text( label='Step 2: Turn on this checkbox to create controls for groups', align="left", height=20)
 #cmds.checkBoxGrp('option_chooseAxis', width=windowWidth, labelArray3=['Create Sub-Assemblies for Groups'], onCommand1=chooseX_Axis, onCommand2=chooseY_Axis, onCommand3=chooseZ_Axis, numberOfRadioButtons=3, editable=True, height=20, select=0 )
-cmds.checkBox('option_subAssemblies', label='Create Sub-Assemblies for Groups', width=windowWidth, onCommand=create_subAssemblies, offCommand=cancel_subAssemblies,  editable=True, height=20, value=False)
+cmds.checkBox('option_subAssemblies', label='Create Controls for Groups', width=windowWidth, onCommand=create_subAssemblies, offCommand=cancel_subAssemblies,  editable=True, height=20, value=False)
 
 cmds.textFieldGrp('controlNamePrefix', label='Custom name prefix', editable=True, width=windowWidth, text='')
 cmds.setParent( '..' )
