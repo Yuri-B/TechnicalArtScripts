@@ -87,18 +87,19 @@ def createMasterControls(*args):
 
         createSlaveControls(masterControl, cleanGroup, namePrefix)
 
+        """ #SUB-ASSEMBLIES - work in progress
         cleanGroupArray = []
         for i in groupArray:
             if i not in cleanGroupArray:
                 cleanGroupArray.append(i)
 
         for groupObj in cleanGroupArray:
-            groupChildren = cmds.listRelatives(obj, children=True)
+            groupChildren = cmds.listRelatives(groupObj, children=True)
             if groupChildren:
                 # the master is the group
-                print groupChildren
-                #namePrefix += "_subAssemblyChild"
-                #createSlaveControls(groupObj, cleanGroup, namePrefix)
+                namePrefix += "_subAssemblyChild"
+                createSlaveControls(groupObj[0], groupChildren, namePrefix)
+        """
 
     else:
         createSlaveControls(masterControl, sel, namePrefix)
@@ -194,8 +195,7 @@ createdControl = {
 controlParameters = {
 #NEW control regime
 "Master" : {
-    "masterColor": random.randint(10,15),
-    "defaultCoordinate": 1
+    "masterColor": random.randint(10,15)
 }
 }
 
@@ -207,9 +207,9 @@ cmds.window("Exploded Viewer",width=windowWidth, height=windowWidth)
 
 cmds.frameLayout( label='Create New Controls' )
 cmds.text( label='Step 1: select objects to shift', align="left", height=20)
-cmds.text( label='Step 2: Turn on this checkbox to create sub-assemblies for all groups', align="left", height=20)
+cmds.text( label='Step 2: Turn on this checkbox to create controls for groups', align="left", height=20)
 #cmds.checkBoxGrp('option_chooseAxis', width=windowWidth, labelArray3=['Create Sub-Assemblies for Groups'], onCommand1=chooseX_Axis, onCommand2=chooseY_Axis, onCommand3=chooseZ_Axis, numberOfRadioButtons=3, editable=True, height=20, select=0 )
-cmds.checkBox('option_subAssemblies', label='Create Sub-Assemblies for Groups', width=windowWidth, onCommand=create_subAssemblies, offCommand=cancel_subAssemblies,  editable=True, height=20, value=False)
+cmds.checkBox('option_subAssemblies', label='Create Controls for Groups', width=windowWidth, onCommand=create_subAssemblies, offCommand=cancel_subAssemblies,  editable=True, height=20, value=False)
 
 cmds.textFieldGrp('controlNamePrefix', label='Custom name prefix', editable=True, width=windowWidth, text='')
 cmds.setParent( '..' )
