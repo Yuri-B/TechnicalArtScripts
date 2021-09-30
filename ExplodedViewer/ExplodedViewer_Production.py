@@ -13,9 +13,11 @@ def chooseZ_Axis(*args):
 
 # new functions
 def create_subAssemblies(*args):
+    print "HEY - created"
     createdControl['subAssemblies_created'] = True
 
 def cancel_subAssemblies(*args):
+    print "HEY - not created"
     createdControl['subAssemblies_created'] = False
 
 def resetMasterControlPositions(*args):
@@ -35,37 +37,13 @@ def resetSlaveControlPositions(*args):
 
 def handleWarning(warningText):
     #cmds.popupMenu(label="foo")
-
     print warningText
 
 def addNamePrefix():
     controlNamePrefix = cmds.textFieldGrp('controlNamePrefix', text=True, query=True)
     return controlNamePrefix
 
-def createMasterControlShape(objects):
-    #workInProgress
-    return
-
-def createMasterControls(*args):
-    # when I will create a way of getting a list of objects, sorting them
-    sel = cmds.ls(selection = True)
-    if len(sel) < 1:
-        handleWarning(warningText="WARNING: please select an object")
-        return
-
-    ##### handle groups work in progress
-    #for obj in sel:
-        #childArray = cmds.listRelatives(obj)
-        #if len(childArray) > 1:
-            #create separate master controller for the parent of that group
-            #if createdControl['subAssemblies_created'] == True
-                #create slave controls for each element in that array
-            #createSlaveControls(masterControl, objects, namePrefix)
-        #else
-            #create separate controls for each child object
-
-    ##### handle groups work in progress
-
+def createMasterControlShape():
     axisParameters = controlParameters["Master"]
     namePrefix = addNamePrefix()
     masterControlName = namePrefix + "Exploder_Ctrl_MASTER"
@@ -75,8 +53,26 @@ def createMasterControls(*args):
     #make master controls into boxes
     cmds.setAttr(masterControl + ".overrideLevelOfDetail", 1)
 
-    #lock unneeded axes ( the aim of the control is to move it in axis that it is assigned to)
-    createSlaveControls(masterControl, sel, namePrefix)
+    return masterControl, namePrefix
+
+def createMasterControls(*args):
+    # when I will create a way of getting a list of objects, sorting them
+    sel = cmds.ls(selection = True)
+    if len(sel) < 1:
+        handleWarning(warningText="WARNING: please select an object")
+        return
+
+    ##### handle groups work in progress
+    for obj in sel:
+        getGroups = cmds.listRelatives(obj, fullPath=True, allDescendents=True)
+
+        # if there are groups, create a master control for that group and slave control for children of that group
+        if createdControl['subAssemblies_created'] == True:
+            return
+
+        else:
+            masterControl, namePrefix = createMasterControlShape()
+            createSlaveControls(masterControl, sel, namePrefix)
 
 def setSlaveControlPosition(obj):
     useXValue = 0
