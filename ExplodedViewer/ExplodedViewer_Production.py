@@ -65,21 +65,25 @@ def createMasterControls(*args):
     # if there are groups and user set the option "create sub assemblies for each group", loop through groups, if there are no groups, create one master control for the whole selection
     if createdControl['subAssemblies_created'] == True:
         groupArray = []
+        nonGroupArray = []
 
         for obj in sel:
             #if object has shape children, add master control. If object has slave children, add secondary co
             parentObj = cmds.listRelatives(obj, parent=True)
             if parentObj: groupArray.append(parentObj)
+            else: nonGroupArray.append(obj)
             #if parentObj.len > 1: groupArray.append(parentObj)
             #getGroups2 = cmds.ls(sel, geometry = False)
             #if there are groups, create a master control for that group and slave control for children of that group
 
+        #join two arrays
+        totalArray = groupArray + nonGroupArray
         cleanGroup = []
-        for i in groupArray:
-            if i not in res:
+        for i in totalArray:
+            if i not in cleanGroup:
                 cleanGroup.append(i)
 
-        print cleanGroup
+        createSlaveControls(masterControl, cleanGroup, namePrefix)
     else:
         createSlaveControls(masterControl, sel, namePrefix)
 
