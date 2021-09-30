@@ -13,11 +13,9 @@ def chooseZ_Axis(*args):
 
 # new functions
 def create_subAssemblies(*args):
-    print "HEY - created"
     createdControl['subAssemblies_created'] = True
 
 def cancel_subAssemblies(*args):
-    print "HEY - not created"
     createdControl['subAssemblies_created'] = False
 
 def resetMasterControlPositions(*args):
@@ -62,15 +60,27 @@ def createMasterControls(*args):
         handleWarning(warningText="WARNING: please select an object")
         return
 
+    masterControl, namePrefix = createMasterControlShape()
+
     # if there are groups and user set the option "create sub assemblies for each group", loop through groups, if there are no groups, create one master control for the whole selection
     if createdControl['subAssemblies_created'] == True:
-        getGroups = cmds.ls(sel, transforms = True)
-        print getGroups
+        groupArray = []
 
-        #for obj in sel:
-            # if there are groups, create a master control for that group and slave control for children of that group
+        for obj in sel:
+            #if object has shape children, add master control. If object has slave children, add secondary co
+            parentObj = cmds.listRelatives(obj, parent=True)
+            if parentObj: groupArray.append(parentObj)
+            #if parentObj.len > 1: groupArray.append(parentObj)
+            #getGroups2 = cmds.ls(sel, geometry = False)
+            #if there are groups, create a master control for that group and slave control for children of that group
+
+        cleanGroup = []
+        for i in groupArray:
+            if i not in res:
+                cleanGroup.append(i)
+
+        print cleanGroup
     else:
-        masterControl, namePrefix = createMasterControlShape()
         createSlaveControls(masterControl, sel, namePrefix)
 
 def setSlaveControlPosition(obj):
@@ -175,7 +185,7 @@ cmds.window("Exploded Viewer",width=windowWidth, height=windowWidth)
 
 cmds.frameLayout( label='Create New Controls' )
 cmds.text( label='Step 1: select objects to shift', align="left", height=20)
-cmds.text( label='Step 2: Turn on this checkbox to create sub-assemblies for all groups', align="left", height=20)
+cmds.text( label='Step 2: Turn on this checkbox to create sub-assemblies for all groups  NOTE: select objects in the outliner for this function to work', align="left", height=20)
 #cmds.checkBoxGrp('option_chooseAxis', width=windowWidth, labelArray3=['Create Sub-Assemblies for Groups'], onCommand1=chooseX_Axis, onCommand2=chooseY_Axis, onCommand3=chooseZ_Axis, numberOfRadioButtons=3, editable=True, height=20, select=0 )
 cmds.checkBox('option_subAssemblies', label='Create Sub-Assemblies for Groups', width=windowWidth, onCommand=create_subAssemblies, offCommand=cancel_subAssemblies,  editable=True, height=20, value=False)
 
