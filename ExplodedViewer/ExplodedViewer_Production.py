@@ -57,19 +57,18 @@ def createMasterControlShape():
 
 def createMasterControls(*args):
     # when I will create a way of getting a list of objects, sorting them
-    sel = cmds.ls(selection = True)
+    sel = cmds.ls(selection = True, transforms=True)
     if len(sel) < 1:
         handleWarning(warningText="WARNING: please select an object")
         return
 
     # if there are groups and user set the option "create sub assemblies for each group", loop through groups, if there are no groups, create one master control for the whole selection
     if createdControl['subAssemblies_created'] == True:
-        for obj in sel:
-            getGroups = cmds.listRelatives(obj, fullPath=True, allDescendents=True)
+        getGroups = cmds.ls(sel, transforms = True)
+        print getGroups
 
-        # if there are groups, create a master control for that group and slave control for children of that group
-
-            return
+        #for obj in sel:
+            # if there are groups, create a master control for that group and slave control for children of that group
     else:
         masterControl, namePrefix = createMasterControlShape()
         createSlaveControls(masterControl, sel, namePrefix)
