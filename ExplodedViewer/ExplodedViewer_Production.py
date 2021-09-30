@@ -62,17 +62,17 @@ def createMasterControls(*args):
         handleWarning(warningText="WARNING: please select an object")
         return
 
-    ##### handle groups work in progress
-    for obj in sel:
-        getGroups = cmds.listRelatives(obj, fullPath=True, allDescendents=True)
+    # if there are groups and user set the option "create sub assemblies for each group", loop through groups, if there are no groups, create one master control for the whole selection
+    if createdControl['subAssemblies_created'] == True:
+        for obj in sel:
+            getGroups = cmds.listRelatives(obj, fullPath=True, allDescendents=True)
 
         # if there are groups, create a master control for that group and slave control for children of that group
-        if createdControl['subAssemblies_created'] == True:
-            return
 
-        else:
-            masterControl, namePrefix = createMasterControlShape()
-            createSlaveControls(masterControl, sel, namePrefix)
+            return
+    else:
+        masterControl, namePrefix = createMasterControlShape()
+        createSlaveControls(masterControl, sel, namePrefix)
 
 def setSlaveControlPosition(obj):
     useXValue = 0
