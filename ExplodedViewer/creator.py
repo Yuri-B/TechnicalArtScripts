@@ -3,12 +3,6 @@ import maya.cmds as cmds
 import random
 
 # new functions
-def create_subAssemblies(*args):
-    createdControl['subAssemblies_created'] = True
-
-def cancel_subAssemblies(*args):
-    createdControl['subAssemblies_created'] = False
-
 def handleWarning(warningText):
     #cmds.popupMenu(label="foo")
     print warningText

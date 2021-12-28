@@ -66,6 +66,7 @@ def proportionalTranslateControls():
     #assign a weighted rating to their positionMultiplier attribute
     controlValue = cmds.floatSliderGrp('proportionalTranslate_UIctrl', value=True, query=True)
 
+    distanceRangkingArray = []
     slaveControls = cmds.ls("*SLAVE*",shapes=False,transforms=True)
     for item in slaveControls:
         controlCenter = cmds.xform(item, query=True, rotatePivot=True, worldSpace=True)
@@ -76,3 +77,5 @@ def proportionalTranslateControls():
         masterControlCenter = cmds.xform(masterControl, query=True, rotatePivot=True, worldSpace=True)
 
         controlDistance = math.sqrt(  math.pow(masterControlCenter[0]-controlCenter[0],2) + math.pow(masterControlCenter[1]-controlCenter[1],2) + math.pow(masterControlCenter[2]-controlCenter[2],2)  )
+        #add all the distances to the distanceRankingArray to determine the maximum distance and minimum distance.
+        distanceRangkingArray.append(controlDistance)
