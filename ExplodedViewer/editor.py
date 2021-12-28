@@ -1,4 +1,8 @@
+import maya.cmds as cmds
 import random
+
+def test(*args)
+    print "TESTING"
 
 def handleWarning(warningText):
     #cmds.popupMenu(label="foo")
@@ -53,24 +57,3 @@ def resetSlaveControlPositions(*args):
 
     for item in slaveControls:
         cmds.setAttr(item +'.positionMultiplier', 1)
-
-# UI here
-
-windowWidth = 256
-
-cmds.window("Exploded Viewer",width=windowWidth)
-
-cmds.frameLayout( label='Modify Controls')
-cmds.text( label='', align="left" )
-cmds.text( label='Randomize control positions', align="left" )
-cmds.floatSliderGrp('positionRandomizer_UIctrl', field=True, minValue=-0.0, maxValue=10.0, fieldMinValue=0.0, fieldMaxValue=10.0, value=0, changeCommand=randomizeChildControls, width=windowWidth )
-#cmds.text( label='Randomize axes', align="left" )
-cmds.text( label='', align="left" )
-cmds.text( label='Randomize control rotations', align="left" )
-cmds.floatSliderGrp('rotationRandomizer_UIctrl', field=True, minValue=-0.0, maxValue=360.0, fieldMinValue=0.0, fieldMaxValue=360.0, value=0, changeCommand=randomizeRotationChildControls, width=windowWidth )
-cmds.separator()
-cmds.button(width=windowWidth, label="Reset Parent Control Positions", align="left", command=resetMasterControlPositions)
-cmds.button(width=windowWidth, label="Reset Child Control Positions", align="right", command=resetSlaveControlPositions)
-cmds.text( label='', align="left" )
-
-cmds.showWindow()

@@ -1,15 +1,8 @@
 # this code can be copied directly into Maya
-
+import maya.cmds as cmds
 import random
 
-def chooseX_Axis(*args):
-    createdControl['axisDirection'] = "X"
-
-def chooseY_Axis(*args):
-    createdControl['axisDirection'] = "Y"
-
-def chooseZ_Axis(*args):
-    createdControl['axisDirection'] = "Z"
+print "RUNNING"
 
 # new functions
 def create_subAssemblies(*args):
@@ -172,33 +165,3 @@ controlParameters = {
     "masterColor": random.randint(10,15)
 }
 }
-
-# UI here
-
-windowWidth = 256
-
-cmds.window("Exploded Viewer",width=windowWidth)
-
-cmds.frameLayout( label='Create New Controls' )
-cmds.text( label='', align="left" )
-cmds.text( label='Control Name Prefix', align="left" )
-cmds.textField('controlNamePrefix', editable=True, text='', width=windowWidth)
-cmds.text( label='', align="left" )
-#cmds.checkBoxGrp('option_chooseAxis', width=windowWidth, labelArray3=['Create Sub-Assemblies for Groups'], onCommand1=chooseX_Axis, onCommand2=chooseY_Axis, onCommand3=chooseZ_Axis, numberOfRadioButtons=3, editable=True, height=20, select=0 )
-cmds.checkBox('option_subAssemblies', label='Create Controls for Groups', width=windowWidth, onCommand=create_subAssemblies, offCommand=cancel_subAssemblies,  editable=True, value=False)
-cmds.text( label='', align="left" )
-# backgroundColor=[0,0.3,0.5],
-cmds.button(width=windowWidth, label="Create Exploded View Controls", align="left", command=createMasterControls)
-cmds.text( label='', align="left" )
-cmds.setParent( '..' )
-
-
-"""
-cmds.frameLayout( label='Help', collapsable=True )
-cmds.text( label='Master Control is the main control for creating exploded view of an assembly of objects. It moves all slave controls that are parented to it, away from itself. The more a Master control is moved along a certain axis, the further slave controls move away from it.', align="left", wordWrap=True, width=windowWidth)
-cmds.text( label='Slave Control is the secondary control for creating exploded views. It is used to control each individual object', align="left", wordWrap=True, width=windowWidth )
-cmds.text( label='Each slave control has an additional attribute called "Position Multiplier". This attribute adjusts the distance between the master control and slave control. The higher the value, the larger the distance', align="left", wordWrap=True, width=windowWidth )
-cmds.setParent( '..' )
-"""
-
-cmds.showWindow()
