@@ -18,27 +18,12 @@ def create_subAssemblies(*args):
 def cancel_subAssemblies(*args):
     createdControl['subAssemblies_created'] = False
 
-def resetMasterControlPositions(*args):
-    masterControls = cmds.ls("*MASTER*",transforms=True)
-
-    # reset positions of X, Y, Z axes controls ( in later releases )
-    # reset the attribute "positionMultiplier" on every singe control
-    for item in masterControls:
-        for axis in ["X","Y","Z"]:
-            cmds.setAttr(item +'.translate'+ axis, 0)
-
-def resetSlaveControlPositions(*args):
-    slaveControls = cmds.ls("*SLAVE*",shapes=False,transforms=True)
-
-    for item in slaveControls:
-        cmds.setAttr(item +'.positionMultiplier', 1)
-
 def handleWarning(warningText):
     #cmds.popupMenu(label="foo")
     print warningText
 
 def addNamePrefix():
-    controlNamePrefix = cmds.textFieldGrp('controlNamePrefix', text=True, query=True)
+    controlNamePrefix = cmds.textField('controlNamePrefix', text=True, query=True)
     return controlNamePrefix
 
 def createMasterControlShape():
@@ -177,22 +162,6 @@ def createSlaveControls(masterControl, sel, namePrefix):
 
     return slaveControl
 
-def randomizeChildControls(*args):
-    randomizerSliderValue = cmds.floatSliderGrp('positionRandomizer_UIctrl', value=True, query=True)
-
-    slaveControls = cmds.ls("*SLAVE*",transforms=True)
-    if len(slaveControls) < 1:
-        handleWarning(warningText="please create Slave controls")
-        return
-
-    minRandValue = (randomizerSliderValue * -1) / 10 + 1
-    maxRandValue = randomizerSliderValue
-
-    for item in slaveControls:
-        # create a random slider value for each different control
-        enterRandomValue = random.uniform(minRandValue,maxRandValue)
-        cmds.setAttr(item +'.positionMultiplier', enterRandomValue)
-
 createdControl = {
 'subAssemblies_created': False
 }
@@ -223,19 +192,6 @@ cmds.button(width=windowWidth, label="Create Exploded View Controls", align="lef
 cmds.text( label='', align="left" )
 cmds.setParent( '..' )
 
-cmds.frameLayout( label='Advanced Options')
-cmds.text( label='', align="left" )
-cmds.text( label='Randomize control positions: set randomness multiplier', align="left" )
-cmds.floatSliderGrp('positionRandomizer_UIctrl', field=True, minValue=-0.0, maxValue=10.0, fieldMinValue=0.0, fieldMaxValue=10.0, value=0, changeCommand=randomizeChildControls, width=windowWidth )
-cmds.text( label='', align="left" )
-#cmds.text( label='Randomize axes', align="left" )
-
-
-cmds.frameLayout( label='Modify Controls')
-cmds.text( label='', align="left" )
-cmds.button(width=windowWidth, label="Reset Parent Control Positions", align="left", command=resetMasterControlPositions)
-cmds.button(width=windowWidth, label="Reset Child Control Positions", align="right", command=resetSlaveControlPositions)
-cmds.text( label='', align="left" )
 
 """
 cmds.frameLayout( label='Help', collapsable=True )
