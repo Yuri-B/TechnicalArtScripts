@@ -36,7 +36,8 @@ def handleRandomizer(translateControls, rotateControls, controlValue):
             cmds.setAttr(item +'.positionMultiplier', enterRandomValue)
 
         if rotateControls == True:
-            return
+            for axisName in ["X","Y","Z"]:
+                cmds.setAttr(item + ".rotate" + axisName, enterRandomValue)
 
 def resetMasterControlPositions(*args):
     masterControls = cmds.ls("*MASTER*",transforms=True)
