@@ -118,7 +118,7 @@ def setSlaveControlPosition(obj):
 
     #get bounding box of objects to position the slave control circle
     #get highest Y value of bounding box
-    # xform = [xmin ymin zmin xmax ymax zmax]
+    #xform = [xmin ymin zmin xmax ymax zmax]
     objectBoundingBox = cmds.xform(obj, query=True, boundingBox=True, worldSpace=True)
 
     #if the object's center is placed in negative quadrant, use min, if placed in positive quadrant, use max
@@ -191,7 +191,6 @@ def randomizeChildControls(*args):
     for item in slaveControls:
         # create a random slider value for each different control
         enterRandomValue = random.uniform(minRandValue,maxRandValue)
-
         cmds.setAttr(item +'.positionMultiplier', enterRandomValue)
 
 createdControl = {
@@ -207,40 +206,43 @@ controlParameters = {
 
 # UI here
 
-windowWidth = 520
+windowWidth = 256
 
-cmds.window("Exploded Viewer",width=windowWidth, height=windowWidth)
+cmds.window("Exploded Viewer",width=windowWidth)
 
 cmds.frameLayout( label='Create New Controls' )
-cmds.text( label='Step 1: select objects to shift', align="left", height=20)
-cmds.text( label='Step 2: Turn on this checkbox to create controls for groups', align="left", height=20)
+cmds.text( label='', align="left" )
+cmds.text( label='Control Name Prefix', align="left" )
+cmds.textField('controlNamePrefix', editable=True, text='', width=windowWidth)
+cmds.text( label='', align="left" )
 #cmds.checkBoxGrp('option_chooseAxis', width=windowWidth, labelArray3=['Create Sub-Assemblies for Groups'], onCommand1=chooseX_Axis, onCommand2=chooseY_Axis, onCommand3=chooseZ_Axis, numberOfRadioButtons=3, editable=True, height=20, select=0 )
-cmds.checkBox('option_subAssemblies', label='Create Controls for Groups', width=windowWidth, onCommand=create_subAssemblies, offCommand=cancel_subAssemblies,  editable=True, height=20, value=False)
-
-cmds.textFieldGrp('controlNamePrefix', label='Custom name prefix', editable=True, width=windowWidth, text='')
+cmds.checkBox('option_subAssemblies', label='Create Controls for Groups', width=windowWidth, onCommand=create_subAssemblies, offCommand=cancel_subAssemblies,  editable=True, value=False)
+cmds.text( label='', align="left" )
+# backgroundColor=[0,0.3,0.5],
+cmds.button(width=windowWidth, label="Create Exploded View Controls", align="left", command=createMasterControls)
+cmds.text( label='', align="left" )
 cmds.setParent( '..' )
 
-cmds.rowLayout(height=60, numberOfColumns=2, width=windowWidth)
-cmds.button(width=windowWidth - 60, label="Create Exploded View Controls", backgroundColor=[0,0.3,0.5], align="left", command=createMasterControls)
-cmds.setParent( '..' )
-
-cmds.frameLayout( label='Advanced Options', collapsable=True, width=windowWidth )
-cmds.text( label='Randomize control positions: set randomness multiplier', height=30, align="left" )
-cmds.floatSliderGrp('positionRandomizer_UIctrl', field=True, minValue=-0.0, maxValue=10.0, fieldMinValue=0.0, fieldMaxValue=10.0, value=0, changeCommand=randomizeChildControls, height=50 )
+cmds.frameLayout( label='Advanced Options')
+cmds.text( label='', align="left" )
+cmds.text( label='Randomize control positions: set randomness multiplier', align="left" )
+cmds.floatSliderGrp('positionRandomizer_UIctrl', field=True, minValue=-0.0, maxValue=10.0, fieldMinValue=0.0, fieldMaxValue=10.0, value=0, changeCommand=randomizeChildControls, width=windowWidth )
+cmds.text( label='', align="left" )
 #cmds.text( label='Randomize axes', align="left" )
-cmds.setParent( '..' )
 
-cmds.frameLayout( label='Reset Existing Controls', collapsable=True )
-cmds.rowLayout(height=40, numberOfColumns=2, width=windowWidth)
-cmds.button(width=windowWidth/2 - 30, label="Reset Parent Control Positions", align="left", backgroundColor=[0.5,0,0.1], command=resetMasterControlPositions)
-cmds.button(width=windowWidth/2 - 30, label="Reset Child Control Positions", align="right", backgroundColor=[0.5,0.5,0], command=resetSlaveControlPositions)
-cmds.setParent( '..' )
-cmds.setParent( '..' )
 
+cmds.frameLayout( label='Modify Controls')
+cmds.text( label='', align="left" )
+cmds.button(width=windowWidth, label="Reset Parent Control Positions", align="left", command=resetMasterControlPositions)
+cmds.button(width=windowWidth, label="Reset Child Control Positions", align="right", command=resetSlaveControlPositions)
+cmds.text( label='', align="left" )
+
+"""
 cmds.frameLayout( label='Help', collapsable=True )
 cmds.text( label='Master Control is the main control for creating exploded view of an assembly of objects. It moves all slave controls that are parented to it, away from itself. The more a Master control is moved along a certain axis, the further slave controls move away from it.', align="left", wordWrap=True, width=windowWidth)
 cmds.text( label='Slave Control is the secondary control for creating exploded views. It is used to control each individual object', align="left", wordWrap=True, width=windowWidth )
 cmds.text( label='Each slave control has an additional attribute called "Position Multiplier". This attribute adjusts the distance between the master control and slave control. The higher the value, the larger the distance', align="left", wordWrap=True, width=windowWidth )
 cmds.setParent( '..' )
+"""
 
 cmds.showWindow()
