@@ -1,5 +1,6 @@
 import maya.cmds as cmds
 import random
+import math
 
 def handleWarning(warningText):
     #cmds.popupMenu(label="foo")
@@ -54,3 +55,24 @@ def resetSlaveControlPositions():
 
     for item in slaveControls:
         cmds.setAttr(item +'.positionMultiplier', 1)
+
+        #reset rotations
+        for axisName in ["X","Y","Z"]:
+            cmds.setAttr(item + ".rotate" + axisName, 0)
+
+def proportionalTranslateControls():
+    #get world space Translate for each child control
+    #rank them from 0 to 10
+    #assign a weighted rating to their positionMultiplier attribute
+    controlValue = cmds.floatSliderGrp('proportionalTranslate_UIctrl', value=True, query=True)
+
+    slaveControls = cmds.ls("*SLAVE*",shapes=False,transforms=True)
+    for item in slaveControls:
+        controlCenter = cmds.xform(item, query=True, rotatePivot=True, worldSpace=True)
+        #get center of each object
+
+        #get master control position
+        masterControl = cmds.ls("*MASTER*",transforms=True)[0]
+        masterControlCenter = cmds.xform(masterControl, query=True, rotatePivot=True, worldSpace=True)
+
+        controlDistance = math.sqrt(  math.pow(masterControlCenter[0]-controlCenter[0],2) + math.pow(masterControlCenter[1]-controlCenter[1],2) + math.pow(masterControlCenter[2]-controlCenter[2],2)  )

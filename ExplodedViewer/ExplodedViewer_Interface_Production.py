@@ -1,7 +1,7 @@
 # this code can be copied directly into Maya
 import maya.cmds as cmds
 import sys
-sys.path.append( '/Users/yuri/Documents/maya/Maya-Projects/default/scripts' )
+sys.path.append( '/Users/yuri/Documents/maya/Maya-Projects/tech_art/scripts' )
 
 import editor
 def resetMasterControlPositions(*args):
@@ -15,6 +15,9 @@ def randomizeRotationChildControls(*args):
 
 def resetSlaveControlPositions(*args):
     editor.resetSlaveControlPositions()
+
+def proportionalTranslateControls(*args):
+    editor.proportionalTranslateControls()
 
 import creator
 def createMasterControls(*args):
@@ -56,6 +59,9 @@ cmds.floatSliderGrp('positionRandomizer_UIctrl', field=True, minValue=-0.0, maxV
 cmds.text( label='', align="left" )
 cmds.text( label='Randomize control rotations', align="left" )
 cmds.floatSliderGrp('rotationRandomizer_UIctrl', field=True, minValue=-0.0, maxValue=360.0, fieldMinValue=0.0, fieldMaxValue=360.0, value=0, changeCommand=randomizeRotationChildControls, width=windowWidth )
+cmds.text( label='', align="left" )
+cmds.text( label='Translate child controls proportionally', align="left" )
+cmds.floatSliderGrp('proportionalTranslate_UIctrl', field=True, minValue=-0.0, maxValue=10.0, fieldMinValue=0.0, fieldMaxValue=10.0, value=0, changeCommand=proportionalTranslateControls, width=windowWidth )
 cmds.separator()
 cmds.button(width=windowWidth, label="Reset Parent Control Positions", align="left", command=resetMasterControlPositions)
 cmds.button(width=windowWidth, label="Reset Child Control Positions", align="right", command=resetSlaveControlPositions)
