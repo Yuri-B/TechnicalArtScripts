@@ -2,8 +2,6 @@
 import maya.cmds as cmds
 import random
 
-print "RUNNING"
-
 # new functions
 def create_subAssemblies(*args):
     createdControl['subAssemblies_created'] = True

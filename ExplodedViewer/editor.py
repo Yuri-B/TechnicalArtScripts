@@ -1,21 +1,18 @@
 import maya.cmds as cmds
 import random
 
-def test(*args)
-    print "TESTING"
-
 def handleWarning(warningText):
     #cmds.popupMenu(label="foo")
     print warningText
 
-def randomizeChildControls(*args):
+def randomizeChildControls():
     controlValue = cmds.floatSliderGrp('positionRandomizer_UIctrl', value=True, query=True)
 
     translateControls = True
     rotateControls = False
     handleRandomizer(translateControls, rotateControls, controlValue)
 
-def randomizeRotationChildControls(*args):
+def randomizeRotationChildControls():
     controlValue = cmds.floatSliderGrp('rotationRandomizer_UIctrl', value=True, query=True)
 
     translateControls = False
@@ -43,7 +40,7 @@ def handleRandomizer(translateControls, rotateControls, controlValue):
             for axisName in ["X","Y","Z"]:
                 cmds.setAttr(item + ".rotate" + axisName, enterRandomValue)
 
-def resetMasterControlPositions(*args):
+def resetMasterControlPositions():
     masterControls = cmds.ls("*MASTER*",transforms=True)
 
     # reset positions of X, Y, Z axes controls ( in later releases )
@@ -52,7 +49,7 @@ def resetMasterControlPositions(*args):
         for axis in ["X","Y","Z"]:
             cmds.setAttr(item +'.translate'+ axis, 0)
 
-def resetSlaveControlPositions(*args):
+def resetSlaveControlPositions():
     slaveControls = cmds.ls("*SLAVE*",shapes=False,transforms=True)
 
     for item in slaveControls:
