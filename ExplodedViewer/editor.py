@@ -68,7 +68,7 @@ def proportionalControls():
     controlValue = cmds.floatSliderGrp('proportionalTranslate_UIctrl', value=True, query=True)
     #test controlValue = 3
 
-    # FIX BUGS HERE :::::: 
+    # FIX BUGS HERE ::::::
     distanceRankingArray = []
     selectedControls = cmds.ls(shapes=False,transforms=True,selection=True)
     for item in selectedControls:
@@ -77,7 +77,7 @@ def proportionalControls():
 
         #get master control position - get parent
         masterControlObject = cmds.listRelatives(item, parent=True)
-        masterControl = cmds.ls(masterControlObject,transforms=True)[0]
+        masterControl = cmds.ls(masterControlObject,transforms=True)
         masterControlCenter = cmds.xform(masterControl, query=True, rotatePivot=True, worldSpace=True)
 
         controlDistance = math.sqrt(  math.pow(masterControlCenter[0]-controlCenter[0],2) + math.pow(masterControlCenter[1]-controlCenter[1],2) + math.pow(masterControlCenter[2]-controlCenter[2],2)  )
