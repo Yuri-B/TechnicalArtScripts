@@ -17,7 +17,7 @@ def resetSlaveControlPositions(*args):
     editor.resetSlaveControlPositions()
 
 def proportionalTranslateControls(*args):
-    editor.proportionalTranslateControls()
+    editor.proportionalControls()
 
 import creator
 def createMasterControls(*args):

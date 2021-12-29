@@ -60,13 +60,13 @@ def resetSlaveControlPositions():
         for axisName in ["X","Y","Z"]:
             cmds.setAttr(item + ".rotate" + axisName, 0)
 
-def proportionalTranslateControls():
+def proportionalControls():
     #get world space Translate for each child control
     #rank them from 0 to 10
     #assign a weighted rating to their positionMultiplier attribute
     controlValue = cmds.floatSliderGrp('proportionalTranslate_UIctrl', value=True, query=True)
 
-    distanceRangkingArray = []
+    distanceRankingArray = []
     slaveControls = cmds.ls("*SLAVE*",shapes=False,transforms=True)
     for item in slaveControls:
         controlCenter = cmds.xform(item, query=True, rotatePivot=True, worldSpace=True)
@@ -78,4 +78,13 @@ def proportionalTranslateControls():
 
         controlDistance = math.sqrt(  math.pow(masterControlCenter[0]-controlCenter[0],2) + math.pow(masterControlCenter[1]-controlCenter[1],2) + math.pow(masterControlCenter[2]-controlCenter[2],2)  )
         #add all the distances to the distanceRankingArray to determine the maximum distance and minimum distance.
-        distanceRangkingArray.append(controlDistance)
+        distanceRankingArray.append(controlDistance)
+
+    highestDistance = max(distanceRankingArray)
+
+    # set attribute to their multipliers
+    for item in slaveControls:
+        itemIndex = slaveControls.index(item)
+
+        multiplierValue = controlValue * ( distanceRankingArray[itemIndex] / highestDistance )
+        cmds.setAttr(item +'.positionMultiplier', multiplierValue)
