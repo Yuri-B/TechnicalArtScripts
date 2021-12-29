@@ -65,6 +65,7 @@ def proportionalControls():
     #rank them from 0 to 10
     #assign a weighted rating to their positionMultiplier attribute
     controlValue = cmds.floatSliderGrp('proportionalTranslate_UIctrl', value=True, query=True)
+    #test controlValue = 3
 
     distanceRankingArray = []
     slaveControls = cmds.ls("*SLAVE*",shapes=False,transforms=True)
