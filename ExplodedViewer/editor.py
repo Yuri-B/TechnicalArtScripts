@@ -48,9 +48,13 @@ def resetControlPositions():
     # reset the attribute "positionMultiplier" on every singe control
     for item in controls:
         for axis in ["X","Y","Z"]:
-            cmds.setAttr(item +'.translate'+ axis, 0)
+            lockedAttrState = cmds.getAttr(item + '.translate'+ axis, lock=True)
+            if lockedAttrState == False:
+                cmds.setAttr(item +'.translate'+ axis, 0)
 
             #FIX BUG HERE - EXCLUDE OBJECTS THAT DON't HAVE THIS ATTRIBUTE --- EXCLUDE
+        hasPositionMultiplier = cmds.listAttr(string="positionMultiplier")
+        if len(hasPositionMultiplier) > 0:
             cmds.setAttr(item +'.positionMultiplier', 1)
 
 def resetControlRotations():
