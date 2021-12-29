@@ -2,6 +2,37 @@
 
 import random
 
+// get bounding box of objects
+// create a circle around the object
+
+def findObjectCenterBoundingBox(obj):
+    useXValue = 0
+    useYValue = 0
+    useZValue = 0
+    multiplyConstraintInputValue = 0.5
+
+    #get bounding box of objects to position the slave control circle
+    #get highest Y value of bounding box
+    # xform = [xmin ymin zmin xmax ymax zmax]
+    objectBoundingBox = cmds.xform(obj, query=True, boundingBox=True, worldSpace=True)
+
+    #if the object's center is placed in negative quadrant, use min, if placed in positive quadrant, use max
+    centerXValue = (objectBoundingBox[0] + objectBoundingBox[3])/2
+    centerYValue = (objectBoundingBox[1] + objectBoundingBox[4])/2
+    centerZValue = (objectBoundingBox[2] + objectBoundingBox[5])/2
+
+    return [useXValue,useYValue,useZValue]
+
+// /////
+
+cmds.circle()
+
+// create selection set of gears. Just add a name string to each gear, and the script will automatically select each gear with that name string. Then the UI will automatically calculate gear rotations in a sequence, based on their radius. Need to create gear sequence chain first - just name the object "GEAR1", GEAR2, GEAR3, GEAR4
+// script will calculate the radius of each gear, and adjust its rotation in the sequence based on its gear ratio. 
+
+
+
+
 def chooseX_Axis(*args):
     createdControl['axisDirection'] = "X"
 
@@ -110,23 +141,7 @@ def createMasterControls(*args):
     else:
         createSlaveControls(masterControl, sel, namePrefix)
 
-def setSlaveControlPosition(obj):
-    useXValue = 0
-    useYValue = 0
-    useZValue = 0
-    multiplyConstraintInputValue = 0.5
 
-    #get bounding box of objects to position the slave control circle
-    #get highest Y value of bounding box
-    # xform = [xmin ymin zmin xmax ymax zmax]
-    objectBoundingBox = cmds.xform(obj, query=True, boundingBox=True, worldSpace=True)
-
-    #if the object's center is placed in negative quadrant, use min, if placed in positive quadrant, use max
-    useXValue = (objectBoundingBox[0] + objectBoundingBox[3])/2
-    useYValue = (objectBoundingBox[1] + objectBoundingBox[4])/2
-    useZValue = (objectBoundingBox[2] + objectBoundingBox[5])/2
-
-    return [useXValue,useYValue,useZValue]
 
 def createMultiplyNodes(selCounter, controlPosition,masterControl,slaveControl):
 

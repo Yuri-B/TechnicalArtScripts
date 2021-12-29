@@ -9,4 +9,12 @@ To make this script work:
 See the script in action here: https://www.artstation.com/artwork/xJab4R
 
 ## NOTES ##
-- more features to come
+Features to come:
+
+1.) Multiplier feature: 
+multiply all the custom offsets by a multiplier factor [ text entry ] 
+
+OR
+
+distance from centre multiplier: multiply all the offsets depending on distance from centre
+[ factor ] 
