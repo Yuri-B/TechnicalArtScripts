@@ -4,17 +4,17 @@ import sys
 sys.path.append( '/Users/yuri/Documents/maya/Maya-Projects/tech_art/scripts' )
 
 import editor
-def resetMasterControlPositions(*args):
-    editor.resetMasterControlPositions()
-
 def randomizeChildControls(*args):
     editor.randomizeChildControls()
 
 def randomizeRotationChildControls(*args):
     editor.randomizeRotationChildControls()
 
-def resetSlaveControlPositions(*args):
-    editor.resetSlaveControlPositions()
+def resetControlPositions(*args):
+    editor.resetControlPositions()
+
+def resetControlRotations(*args):
+    editor.resetControlRotations()
 
 def proportionalTranslateControls(*args):
     editor.proportionalControls()
@@ -41,7 +41,7 @@ tabs = cmds.tabLayout(innerMarginWidth=8, innerMarginHeight=8)
 
 child1 = cmds.rowColumnLayout( numberOfColumns=1 )
 cmds.text( label='', align="left" )
-cmds.text( label='Control Name Prefix', align="left" )
+cmds.text( label='Create Control Name Prefix', align="left" )
 cmds.textField('controlNamePrefix', editable=True, text='', width=windowWidth)
 cmds.text( label='', align="left" )
 # backgroundColor=[0,0.3,0.5],
@@ -51,10 +51,6 @@ cmds.setParent( '..' )
 
 child2 = cmds.rowColumnLayout( numberOfColumns=1 )
 cmds.text( label='', align="left" )
-cmds.text( label='Control Name Prefix', align="left" )
-#users can query certain controls
-cmds.textField('queryControlPrefix', editable=True, text='', width=windowWidth)
-cmds.separator()
 cmds.text( label='Randomize control positions', align="left" )
 cmds.floatSliderGrp('positionRandomizer_UIctrl', field=True, minValue=-0.0, maxValue=10.0, fieldMinValue=0.0, fieldMaxValue=10.0, value=0, changeCommand=randomizeChildControls, width=windowWidth )
 #cmds.text( label='Randomize axes', align="left" )
@@ -65,8 +61,8 @@ cmds.text( label='', align="left" )
 cmds.text( label='Translate child controls proportionally', align="left" )
 cmds.floatSliderGrp('proportionalTranslate_UIctrl', field=True, minValue=-0.0, maxValue=10.0, fieldMinValue=0.0, fieldMaxValue=10.0, value=0, changeCommand=proportionalTranslateControls, width=windowWidth )
 cmds.separator()
-cmds.button(width=windowWidth, label="Reset Parent Control Positions", align="left", command=resetMasterControlPositions)
-cmds.button(width=windowWidth, label="Reset Child Control Positions", align="right", command=resetSlaveControlPositions)
+cmds.button(width=windowWidth, label="Reset Positions", align="left", command=resetControlPositions)
+cmds.button(width=windowWidth, label="Reset Rotations", align="right", command=resetControlRotations)
 cmds.text( label='', align="left" )
 cmds.setParent( '..' )
 

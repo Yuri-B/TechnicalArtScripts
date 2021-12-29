@@ -22,40 +22,39 @@ def randomizeRotationChildControls():
 
 def handleRandomizer(translateControls, rotateControls, controlValue):
 
-    slaveControls = cmds.ls("*SLAVE*",transforms=True)
+    controls = cmds.ls(transforms=True, selection=True)
     if len(slaveControls) < 1:
-        handleWarning(warningText="please create Slave controls")
+        handleWarning(warningText="please select controls")
         return
 
     minRandValue = (controlValue * -1) / 10 + 1
     maxRandValue = controlValue
 
-    for item in slaveControls:
+    for item in controls:
         # create a random slider value for each different control
         enterRandomValue = random.uniform(minRandValue,maxRandValue)
 
-        if translateControls == True:
+        if translateControls == True && item.positionMultiplier:
             cmds.setAttr(item +'.positionMultiplier', enterRandomValue)
 
         if rotateControls == True:
             for axisName in ["X","Y","Z"]:
                 cmds.setAttr(item + ".rotate" + axisName, enterRandomValue)
 
-def resetMasterControlPositions():
-    masterControls = cmds.ls("*MASTER*",transforms=True)
+def resetControlPositions():
+    controls = cmds.ls(transforms=True,selection=True)
 
     # reset positions of X, Y, Z axes controls ( in later releases )
     # reset the attribute "positionMultiplier" on every singe control
     for item in masterControls:
         for axis in ["X","Y","Z"]:
             cmds.setAttr(item +'.translate'+ axis, 0)
+            cmds.setAttr(item +'.positionMultiplier', 1)
 
-def resetSlaveControlPositions():
-    slaveControls = cmds.ls("*SLAVE*",shapes=False,transforms=True)
+def resetControlRotations():
+    controls = cmds.ls(shapes=False,transforms=True,selection=True)
 
-    for item in slaveControls:
-        cmds.setAttr(item +'.positionMultiplier', 1)
-
+    for item in controls:
         #reset rotations
         for axisName in ["X","Y","Z"]:
             cmds.setAttr(item + ".rotate" + axisName, 0)
@@ -68,13 +67,14 @@ def proportionalControls():
     #test controlValue = 3
 
     distanceRankingArray = []
-    slaveControls = cmds.ls("*SLAVE*",shapes=False,transforms=True)
+    slaveControls = cmds.ls("SLAVE",shapes=False,transforms=True,selection=True)
     for item in slaveControls:
         controlCenter = cmds.xform(item, query=True, rotatePivot=True, worldSpace=True)
         #get center of each object
 
-        #get master control position
-        masterControl = cmds.ls("*MASTER*",transforms=True)[0]
+        #get master control position - get parent
+        masterControlObject = cmds.listRelatives(item, parent=True)
+        masterControl = cmds.ls(masterControlObject,transforms=True)[0]
         masterControlCenter = cmds.xform(masterControl, query=True, rotatePivot=True, worldSpace=True)
 
         controlDistance = math.sqrt(  math.pow(masterControlCenter[0]-controlCenter[0],2) + math.pow(masterControlCenter[1]-controlCenter[1],2) + math.pow(masterControlCenter[2]-controlCenter[2],2)  )
