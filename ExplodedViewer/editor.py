@@ -35,7 +35,9 @@ def handleRandomizer(translateControls, rotateControls, controlValue):
         enterRandomValue = random.uniform(minRandValue,maxRandValue)
 
         if translateControls == True:
-            cmds.setAttr(item +'.positionMultiplier', enterRandomValue)
+            hasPositionMultiplier = cmds.listAttr(item,string="positionMultiplier")
+            if hasPositionMultiplier:
+                cmds.setAttr(item +'.positionMultiplier', enterRandomValue)
 
         if rotateControls == True:
             for axisName in ["X","Y","Z"]:
@@ -48,13 +50,14 @@ def resetControlPositions():
     # reset the attribute "positionMultiplier" on every singe control
     for item in controls:
         for axis in ["X","Y","Z"]:
-            lockedAttrState = cmds.getAttr(item + '.translate'+ axis, lock=True)
-            if lockedAttrState == False:
+            try:
                 cmds.setAttr(item +'.translate'+ axis, 0)
+            except:
+                print("this object has locked attributes")
 
             #FIX BUG HERE - EXCLUDE OBJECTS THAT DON't HAVE THIS ATTRIBUTE --- EXCLUDE
-        hasPositionMultiplier = cmds.listAttr(string="positionMultiplier")
-        if len(hasPositionMultiplier) > 0:
+        hasPositionMultiplier = cmds.listAttr(item,string="positionMultiplier")
+        if hasPositionMultiplier:
             cmds.setAttr(item +'.positionMultiplier', 1)
 
 def resetControlRotations():
@@ -91,8 +94,10 @@ def proportionalControls():
     highestDistance = max(distanceRankingArray)
 
     # set attribute to their multipliers
-    for item in slaveControls:
-        itemIndex = slaveControls.index(item)
+    for item in selectedControls:
+        hasPositionMultiplier = cmds.listAttr(item,string="positionMultiplier")
+        if hasPositionMultiplier:
+            itemIndex = selectedControls.index(item)
 
-        multiplierValue = controlValue * ( distanceRankingArray[itemIndex] / highestDistance )
-        cmds.setAttr(item +'.positionMultiplier', multiplierValue)
+            multiplierValue = controlValue * ( distanceRankingArray[itemIndex] / highestDistance )
+            cmds.setAttr(item +'.positionMultiplier', multiplierValue)
