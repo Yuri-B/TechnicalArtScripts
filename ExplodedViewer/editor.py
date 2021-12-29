@@ -23,7 +23,7 @@ def randomizeRotationChildControls():
 def handleRandomizer(translateControls, rotateControls, controlValue):
 
     controls = cmds.ls(transforms=True, selection=True)
-    if len(slaveControls) < 1:
+    if len(controls) < 1:
         handleWarning(warningText="please select controls")
         return
 
@@ -34,7 +34,7 @@ def handleRandomizer(translateControls, rotateControls, controlValue):
         # create a random slider value for each different control
         enterRandomValue = random.uniform(minRandValue,maxRandValue)
 
-        if translateControls == True && item.positionMultiplier:
+        if translateControls == True:
             cmds.setAttr(item +'.positionMultiplier', enterRandomValue)
 
         if rotateControls == True:
@@ -46,9 +46,11 @@ def resetControlPositions():
 
     # reset positions of X, Y, Z axes controls ( in later releases )
     # reset the attribute "positionMultiplier" on every singe control
-    for item in masterControls:
+    for item in controls:
         for axis in ["X","Y","Z"]:
             cmds.setAttr(item +'.translate'+ axis, 0)
+
+            #FIX BUG HERE - EXCLUDE OBJECTS THAT DON't HAVE THIS ATTRIBUTE --- EXCLUDE
             cmds.setAttr(item +'.positionMultiplier', 1)
 
 def resetControlRotations():
@@ -66,9 +68,10 @@ def proportionalControls():
     controlValue = cmds.floatSliderGrp('proportionalTranslate_UIctrl', value=True, query=True)
     #test controlValue = 3
 
+    # FIX BUGS HERE :::::: 
     distanceRankingArray = []
-    slaveControls = cmds.ls("SLAVE",shapes=False,transforms=True,selection=True)
-    for item in slaveControls:
+    selectedControls = cmds.ls(shapes=False,transforms=True,selection=True)
+    for item in selectedControls:
         controlCenter = cmds.xform(item, query=True, rotatePivot=True, worldSpace=True)
         #get center of each object
 
