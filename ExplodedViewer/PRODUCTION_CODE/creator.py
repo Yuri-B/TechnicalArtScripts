@@ -2,7 +2,8 @@
 import maya.cmds as cmds
 import random
 
-# new functions
+# CONTROLLERS FOR CREATOR
+
 def handleWarning(warningText):
     #cmds.popupMenu(label="foo")
     print warningText

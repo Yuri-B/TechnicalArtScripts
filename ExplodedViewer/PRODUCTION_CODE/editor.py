@@ -2,6 +2,8 @@ import maya.cmds as cmds
 import random
 import math
 
+# CONTROLLERS
+
 def handleWarning(warningText):
     #cmds.popupMenu(label="foo")
     print warningText
@@ -53,9 +55,9 @@ def resetControlPositions():
             try:
                 cmds.setAttr(item +'.translate'+ axis, 0)
             except:
+                #if object has locked attributes, do not reset controls
                 print("this object has locked attributes")
 
-            #FIX BUG HERE - EXCLUDE OBJECTS THAT DON't HAVE THIS ATTRIBUTE --- EXCLUDE
         hasPositionMultiplier = cmds.listAttr(item,string="positionMultiplier")
         if hasPositionMultiplier:
             cmds.setAttr(item +'.positionMultiplier', 1)
@@ -70,34 +72,35 @@ def resetControlRotations():
 
 def proportionalControls():
     #get world space Translate for each child control
-    #rank them from 0 to 10
-    #assign a weighted rating to their positionMultiplier attribute
+    #save distance between center of master control and world space Translate for each child control into an array
+    #assign a weighted rating to their positionMultiplier attribute. Weighted rating is relative to the child control which has the highest distance between itself and master control
     controlValue = cmds.floatSliderGrp('proportionalTranslate_UIctrl', value=True, query=True)
     #test controlValue = 3
 
-    # FIX BUGS HERE ::::::
     distanceRankingArray = []
     selectedControls = cmds.ls(shapes=False,transforms=True,selection=True)
     for item in selectedControls:
+        #get center of each child control
         controlCenter = cmds.xform(item, query=True, rotatePivot=True, worldSpace=True)
-        #get center of each object
 
-        #get master control position - get parent
+        #get center of master control that is a parent of child control
         masterControlObject = cmds.listRelatives(item, parent=True)
         masterControl = cmds.ls(masterControlObject,transforms=True)
         masterControlCenter = cmds.xform(masterControl, query=True, rotatePivot=True, worldSpace=True)
 
+        #find distance between center of master control and child control
         controlDistance = math.sqrt(  math.pow(masterControlCenter[0]-controlCenter[0],2) + math.pow(masterControlCenter[1]-controlCenter[1],2) + math.pow(masterControlCenter[2]-controlCenter[2],2)  )
-        #add all the distances to the distanceRankingArray to determine the maximum distance and minimum distance.
+        #save all the distances to the distanceRankingArray to determine the maximum distance and minimum distance.
         distanceRankingArray.append(controlDistance)
 
     highestDistance = max(distanceRankingArray)
 
-    # set attribute to their multipliers
+    # first item in selection has been assigned to DistanceRankingArray as first item, so the object index in DistanceRankingArray and selection match perfectly
     for item in selectedControls:
         hasPositionMultiplier = cmds.listAttr(item,string="positionMultiplier")
         if hasPositionMultiplier:
             itemIndex = selectedControls.index(item)
 
+            #weighted rating = distance between specific child control and master control : highest distance from arrat
             multiplierValue = controlValue * ( distanceRankingArray[itemIndex] / highestDistance )
             cmds.setAttr(item +'.positionMultiplier', multiplierValue)

@@ -1,7 +1,7 @@
 # this code can be copied directly into Maya
 import maya.cmds as cmds
 import sys
-# INSERT YOUR WORKING MAYA SCRIPTS DIRECTORY HERE
+# ()()()() INSERT YOUR WORKING MAYA SCRIPTS DIRECTORY HERE ()()()()
 sys.path.append( '/Users/yuri/Documents/maya/Maya-Projects/tech_art/scripts' )
 
 # CONTROLLER
