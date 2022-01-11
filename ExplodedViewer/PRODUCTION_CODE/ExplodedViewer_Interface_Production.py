@@ -1,8 +1,12 @@
 # this code can be copied directly into Maya
 import maya.cmds as cmds
 import sys
+# INSERT YOUR WORKING MAYA SCRIPTS DIRECTORY HERE
 sys.path.append( '/Users/yuri/Documents/maya/Maya-Projects/tech_art/scripts' )
 
+# CONTROLLER
+
+# editor functions
 import editor
 def randomizeChildControls(*args):
     editor.randomizeChildControls()
@@ -19,6 +23,7 @@ def resetControlRotations(*args):
 def proportionalTranslateControls(*args):
     editor.proportionalControls()
 
+# creator functions
 import creator
 def createMasterControls(*args):
     creator.createMasterControls()
@@ -29,9 +34,7 @@ def create_subAssemblies(*args):
 def cancel_subAssemblies(*args):
     creator.cancel_subAssemblies()
 
-createMasterControls
-
-# UI here
+# VIEW with UI here
 
 windowWidth = 256
 
@@ -70,6 +73,5 @@ cmds.text( label='', align="left" )
 cmds.setParent( '..' )
 
 cmds.tabLayout( tabs, edit=True, tabLabel=((child1, 'Create New Controls'), (child2, 'Edit Controls')), width=windowWidth )
-
 
 cmds.showWindow()

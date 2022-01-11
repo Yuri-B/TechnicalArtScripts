@@ -42,3 +42,8 @@ if createdControl['subAssemblies_created'] == True:
             subAssemblyNamePrefix = "_subAssemblyChild"
             createSlaveControls(groupMasterControl, groupChildren, subAssemblyNamePrefix)
     """
+
+    controls = cmds.ls(transforms=True, selection=True)
+
+for item in controls:
+    cmds.xform( centerPivots=True )
