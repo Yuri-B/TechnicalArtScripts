@@ -20,3 +20,10 @@ rotation = cmds.joint(selection, query=True, orientation=True)
 position = cmds.joint(selection, query=True, position=True)
 
 NExt orientation
+
+# set joint orientation of end joint based on orientation from previous one
+selection = cmds.ls(selection=True)
+rotation = cmds.joint(selection, query=True, orientation=True)
+position = cmds.joint(selection, query=True, position=True)
+
+cmds.setAttr("nurbsSquare1",translateX = position[0], translateY=position[1], translateZ=position[2], rotateX= rotation[0], rotateY=rotation[1], rotateZ=rotation[2])
