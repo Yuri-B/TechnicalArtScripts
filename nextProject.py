@@ -26,3 +26,9 @@ cmds.setAttr('nurbsSquare1.' + 'translateZ', position[2])
 cmds.setAttr('nurbsSquare1.' + 'rotateX', rotation[0])
 cmds.setAttr('nurbsSquare1.' + 'rotateY', rotation[1])
 cmds.setAttr('nurbsSquare1.' + 'rotateZ', rotation[2])
+
+=====
+joint_orient = cmds.getAttr('{}.jointOrient'.format(joint_name))[0]
+world_rotation = cmds.xform(joint_name, q=True, worldSpace=True, rotation=True)
+cmds.setAttr('{}.jointOrient'.format(joint_name), 0, 0, 0)
+cmds.xform(joint_name, worldSpace=True, rotation=world_rotation)
