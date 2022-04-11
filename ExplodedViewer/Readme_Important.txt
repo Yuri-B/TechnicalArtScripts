@@ -1,10 +1,17 @@
 README
+Current version: 0.5 ( BETA ) 
 
 **&*^&*(^(&* <<<  GENERAL INFO  >>> **&*^&*(^(&*
 
-See the script in action here, to find out how it is used: https://www.artstation.com/artwork/xJab4R 
+See the script in action here, to find out how it is used: https://www.artstation.com/artwork/B3ne39
 
-This script allows users to create broken apart or exploded views of an assembly of objects, without changing the original transform coordinates of each object. The script creates a Master controller whose position and rotation control all the slave controls that are attached to it.
+This script allows users to create broken apart or exploded views of an assembly of objects, without changing the original transform coordinates of each object. The script creates a Master controller whose position and rotation move and rotate all the slave controls that are attached to it.
+
+LIMITATIONS:
+- the model's centre has to be placed at (0,0,0) coordinate in the viewport, to get the best results.  
+
+FUTURE FEATURES:
+- make exploded views work relative to any selected object or group
 
 //////////////////////
 
